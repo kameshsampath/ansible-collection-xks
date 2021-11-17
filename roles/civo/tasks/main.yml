@@ -1,0 +1,26 @@
+- name: "Save Civo Credentials"
+  ansible.builtin.command:
+    argv:
+      - civo
+      - apikey
+      - save 
+      - default
+      - "{{ civo_api_key }}"
+  when: create_civo_credentials_file  | bool
+
+- name: "Set Default civo API Key"
+  ansible.builtin.command:
+    argv:
+      - civo
+      - apikey
+      - current 
+      - default
+  when: create_civo_credentials_file  | bool
+
+- name: "Create k3s Cluster"
+  include: k3s_create.yml
+  when: (civo_create | bool) and not (civo_delete | bool)
+
+- name: "Delete k3s Cluster"
+  include: k3s_rollback.yml
+  when: (civo_delete | bool) and not (civo_create | bool)

@@ -1,0 +1,14 @@
+- name: "Create VPC"
+  include: network/vpc.yml
+  when: ( gcp_create_vpc | bool ) and  not ( gcp_delete_vpc | bool)
+
+- name: "Create Kubernetes Cluster"
+  include: k8s/gke_cluster.yml
+  when: ( gke_create | bool ) and not ( gke_delete | bool )
+
+- name: "Delete Kubernetes Cluster"
+  include: k8s/gke_cluster_rollback.yml
+  when: ( gke_delete | bool ) and not ( gke_create | bool )
+- name: "Delete VPC"
+  include: network/vpc_rollback.yml
+  when: not ( gcp_create_vpc | bool ) and ( gcp_delete_vpc | bool )

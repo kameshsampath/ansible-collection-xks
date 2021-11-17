@@ -1,0 +1,38 @@
+- hosts: localhost
+
+  vars_files:
+    - .local.vars.yml
+
+  vars:
+    work_dir: "{{ playbook_dir }}"
+    
+  # Make sure to leave the deletion variables at role level to have higher precedence than .local.vars.yml
+  roles:
+      - role: civo
+        vars:
+          civo_create: no
+          civo_delete: yes
+        tags:
+        - cloud
+        - civo
+      - role: gcp
+        vars:
+          gcp_create_vpc: no
+          gcp_delete_vpc: yes
+          gke_create: no
+          gke_delete: yes
+        tags:
+        #- cloud
+        - gcp
+  
+  tasks:
+
+    - name: "Remove kubeconfigs"
+      local_action:
+        module: ansible.builtin.file
+        dest: "{{ item }}"
+        state: absent
+      with_fileglob:
+        - "{{ work_dir }}/.kube/*config"
+      tags:
+        - base
