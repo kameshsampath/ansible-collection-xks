@@ -2,6 +2,15 @@
 
 Documentation for the collection.
 
+>**WARNING:** This collection is currently work in progress and subject to undergo lot of updates
+
+With current version you can deploy Kubernetes clusters on,
+
+- [x] Google Cloud(GKE)
+- [x] Civo Cloud
+- [ ] Amazon Kubernetes Service(EKS)
+- [ ] Azure Kubernetes Service(AKS)
+
 ## Pre-requisites
 
 - install [direnv](https://direnv.net)
@@ -30,8 +39,6 @@ Create variables that will be used by ansible playbook,
 make .local.vars.yml
 ```
 
->**NOTE:** The `.local.vars.yml` is ignored by git. If you put sensitive information in `.local.vars.yml`, please make sure to encrypt it using the **encrypt-vars** target
-
 Create a password file `$PWD/.password`,
 
 ```shell
@@ -42,6 +49,12 @@ Edit `$PWD/.envrc.local` and add the following entry,
 
 ```shell
 export VAULT_FILE="$PWD/.password"
+```
+
+Encrypt the `.local.vars.yml` by running the command,
+
+```shell
+make encrypt-vars
 ```
 
 ## GKE Cluster
