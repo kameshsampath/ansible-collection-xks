@@ -66,6 +66,6 @@ result-*
 # vagrant
 .vagrant 
 
-.envrc
-.env*
+.envrc*
+!.envrc
 test.yml

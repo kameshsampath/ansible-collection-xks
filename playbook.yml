@@ -1,11 +1,10 @@
 - hosts: localhost
-
   vars_files:
     - .local.vars.yml
 
   vars:
     work_dir: "{{ playbook_dir }}/work"
-  
+
   roles:
     - role: kameshsampath.xks.civo
       tags:
@@ -13,20 +12,31 @@
         - civo
     - role: kameshsampath.xks.azure
       tags:
-       - cloud
-        - gcp
+        - cloud
+        - azure
     - role: kameshsampath.xks.google
       tags:
-       - cloud
+        - cloud
         - gcp
+      environment:
+        GOOGLE_APPLICATION_CREDENTIALS: "{{ gcp_cred_file  }}"
     - role: kameshsampath.xks.amazon
       tags:
         - cloud
         - aws
-  
+
   tasks:
+    - name: "Create Work Directories"
+      local_action:
+        module: ansible.builtin.file
+        dest: "{{ work_dir }}/.kube"
+        mode: 0700
+        state: directory
+      tags:
+        - work
+        - base
     - name: "Merge Kubconfig"
-      set_fact: 
+      set_fact:
         kubeconfig: "{{ lookup('fileglob', work_dir +'/.kube/*.kubeconfig') | regex_replace(',',':') }}"
       tags:
         - work
@@ -38,18 +48,18 @@
       tags:
         - work
         - base
-    
+
     - name: "Merge and Flatten Kubeconfig"
       local_action:
         module: ansible.builtin.command
         argv:
-         - kubectl 
-         - config
-         - view 
-         - --flatten
+          - kubectl
+          - config
+          - view
+          - --flatten
       register: merged_kubeconfig
       environment:
-         KUBECONFIG: "{{ kubeconfig  }}"
+        KUBECONFIG: "{{ kubeconfig  }}"
       tags:
         - work
         - base
@@ -62,5 +72,3 @@
       tags:
         - work
         - base
-    
-    

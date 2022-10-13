@@ -3,6 +3,7 @@ exclude_paths:
 - .github/
 - .venv
 - .git
+- .direnv/
 
 loop_var_prefix: "{role}_"
 

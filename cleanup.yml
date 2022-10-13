@@ -8,14 +8,14 @@
     
   # Make sure to leave the deletion variables at role level to have higher precedence than .local.vars.yml
   roles:
-      - role: civo
+      - role: kameshsampath.xks.civo
         vars:
           civo_create: no
           civo_delete: yes
         tags:
         - cloud
         - civo
-      - role: gcp
+      - role: kameshsampath.xks.gcp
         vars:
           gcp_create_vpc: no
           gcp_delete_vpc: yes

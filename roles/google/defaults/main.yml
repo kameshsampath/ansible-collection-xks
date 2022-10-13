@@ -1,3 +1,5 @@
+# cluster name
+gke_cluster_name: kameshs-demos
 
 gcp_cred_kind: serviceaccount
 create_gcp_credentials_file: no
@@ -6,15 +8,17 @@ gcp_cred_file: "{{ lookup('env','GOOGLE_APPLICATION_CREDENTIALS') }}"
 # VPC
 gcp_create_vpc: yes
 gcp_delete_vpc: no
-gcp_vpc_name: kameshs-k8s-vpc
+gcp_vpc_name: "{{ gke_cluster_name }}-vpc"
 
 # k8s
 gke_create: yes
 gke_delete: no
-gke_cluster_name: kameshs-gloo-demos
 gke_node_count: 3
-gke_kubernetes_version: 1.21.4-gke.301
-gke_release_channel: RAPID
+gke_release_channel: STABLE
+# gcloud container get-server-config --flatten="channels" \
+# --filter="channels.channel=STABLE" \
+#    --format="yaml(channels.channel,channels.defaultVersion)"
+gke_kubernetes_version: 1.22.12-gke.1200
 gke_cluster_json_query: "resources[?name == '{{ gke_cluster_name }}']"
 
 # VPN

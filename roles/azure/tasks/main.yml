@@ -1,0 +1,3 @@
+- name: AKS Not Implemented
+  ansible.builtin.fail:
+    msg: AKS Not Implemented.
